@@ -6,7 +6,7 @@
   <script src="https://cdn.jsdelivr.net/npm/monday-sdk-js/dist/main.js"></script>
 </head>
 <body>
-  <h2>OAuth Authentication with Monday SDK new latest 1</h2>
+  <h2>OAuth Authentication with Monday SDK new latest 123</h2>
 
   <h3>Step 1: Enter Client Credentials (Client ID & Secret)</h3>
   <input type="text" id="clientId" placeholder="Enter Client ID" value="155b531ac0523178cdb88f3c00234d8c"><br><br>
@@ -33,6 +33,7 @@
 
     try {
       monday = window.mondaySdk();
+      monday.setApiVersion("2025-01"); // Set API version explicitly
     } catch (error) {
       console.error('Error initializing Monday SDK:', error);
     }
@@ -47,10 +48,14 @@
         }
 
         try {
-          // Store the client credentials in Monday Secrets Manager
-          await monday.secretsManager.setSecret('client_id', clientId);
-          await monday.secretsManager.setSecret('client_secret', clientSecret);
-          alert("Client credentials stored securely in Monday Secrets Manager.");
+          // Ensure secretsManager is available
+          if (monday.secretsManager) {
+            await monday.secretsManager.setSecret('client_id', clientId);
+            await monday.secretsManager.setSecret('client_secret', clientSecret);
+            alert("Client credentials stored securely in Monday Secrets Manager.");
+          } else {
+            console.error("SecretsManager is not initialized.");
+          }
         } catch (error) {
           console.error("Error storing credentials:", error);
         }
