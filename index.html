@@ -2,54 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Store Credentials in Monday Secure Storage</title>
+  <title>Test Monday SDK</title>
   <script src="https://cdn.monday.com/monday-sdk.js"></script>
 </head>
 <body>
-  <h2>Store Client ID & Secret in Monday Secure Storage 2</h2>
-
-  <input type="text" id="clientId" placeholder="Enter Client ID"><br><br>
-  <input type="password" id="clientSecret" placeholder="Enter Client Secret"><br><br>
-
-  <button id="saveBtn">Save to Monday Secure Storage</button>
-  <button id="loadBtn">Load from Monday Secure Storage</button>
-
+  <h2>Test Monday SDK</h2>
   <p id="message"></p>
 
   <script>
-    window.addEventListener("load", function() {
-      // Check if the Monday SDK is available
-      if (window.monday) {
-        const monday = window.monday;
-
-        // Save credentials in Monday Secure Storage
-        document.getElementById("saveBtn").addEventListener("click", async () => {
-          const clientId = document.getElementById("clientId").value.trim();
-          const clientSecret = document.getElementById("clientSecret").value.trim();
-
-          if (!clientId || !clientSecret) {
-            document.getElementById("message").innerText = "Please enter both values.";
-            return;
-          }
-
-          await monday.storage.setItem("client_id", clientId);
-          await monday.storage.setItem("client_secret", clientSecret);
-
-          document.getElementById("message").innerText = "Credentials stored securely in Monday.";
-        });
-
-        // Retrieve credentials from Monday Secure Storage
-        document.getElementById("loadBtn").addEventListener("click", async () => {
-          const storedId = await monday.storage.getItem("client_id");
-          const storedSecret = await monday.storage.getItem("client_secret");
-
-          document.getElementById("message").innerText =
-            `Stored Client ID: ${storedId.data?.value || "(not found)"} | Stored Secret: ${storedSecret.data?.value || "(not found)"}`;
-        });
-      } else {
-        document.getElementById("message").innerText = "Error: Monday SDK not loaded.";
-      }
-    });
+    if (window.monday) {
+      document.getElementById("message").innerText = "Monday SDK loaded successfully!";
+    } else {
+      document.getElementById("message").innerText = "Error: Monday SDK not loaded.";
+    }
   </script>
 </body>
 </html>
