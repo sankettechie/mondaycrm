@@ -1,12 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My GitHub Pages Website</title>
+  <meta charset="UTF-8">
+  <title>OAuth Authentication with Monday SDK</title>
+  <script src="https://cdn.jsdelivr.net/npm/monday-sdk-js/dist/main.js"></script>
 </head>
 <body>
-    <h1>Welcome to My GitHub Pages Website!</h1>
-    <p>This is a simple page hosted on GitHub Pages.</p>
+  <h2>OAuth Authentication with Monday SDK new test</h2>
+
+  <h3>Step 1: Enter Client Credentials (Client ID & Secret)</h3>
+  <input type="text" id="clientId" placeholder="Enter Client ID"><br><br>
+  <input type="password" id="clientSecret" placeholder="Enter Client Secret"><br><br>
+  <input type="text" id="redirectUri" placeholder="Enter Redirect URI"><br><br>
+  <button id="saveBtn">Save Client Credentials to Secrets Manager</button>
+
+  <h3>Step 2: Authenticate with Monday</h3>
+  <button id="authBtn">Authenticate with OAuth</button>
+
+  <h3>Step 3: View Auth Token</h3>
+  <button id="viewTokenBtn">View and Store Auth Token</button>
+  
+  <h3>Step 4: Load Token</h3>
+  <button id="loadTokenBtn">View Stored Auth Token</button>
+
+  <p id="status"></p>
+
+  <script>
+    let monday;
+    try {
+      monday = window.mondaySdk();
+    } catch (error) {
+      console.error('Error initializing Monday SDK:', error);
+    }
+
+    // Check if mondaySdk is available before proceeding
+    if (monday) {
+      // Step 1: Save client ID and client secret to Monday's Secrets Manager
+      document.getElementById("saveBtn").addEventListener("click", async () => {
+        const clientId = document.getElementById("clientId").value.trim();
+        const clientSecret = document.getElementById("clientSecret").value.trim();
+
+        if (!clientId || !clientSecret) {
+          alert("Please enter both values.");
+          return;
+        }
+
+        try {
+          // Store the client credentials in Monday Secrets Manager
+          await monday.secretsManager.setSecret('client_id', clientId);
+          await monday.secretsManager.setSecret('client_secret', clientSecret);
+          alert("Client credentials stored securely in Monday Secrets Manager.");
+        } catch (error) {
+          console.error("Error storing credentials:", error);
+        }
+      });
+
+      // Step 2: Redirect user to OAuth URL to authenticate
+      document.getElementById("authBtn").addEventListener("click", async () => {
+        const clientId = "155b531ac0523178cdb88f3c00234d8c";
+        const clientSecret = "d792294ed2e448167a3c4d1e182d1e4e";
+        const redirectUri = "https://lucent-bienenstitch-70aa1b.netlify.app/";
+
+        const mondayAuthUrl = `https://auth.monday.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
+        window.location.href = mondayAuthUrl;  // Redirect to OAuth URL
+      });
+
+      // Step 3: After OAuth, retrieve and store the auth token securely in SecureStorage
+      document.getElementById("viewTokenBtn").addEventListener("click", async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.has("code")) {
+          const code = urlParams.get("code");
+
+          const clientId = "155b531ac0523178cdb88f3c00234d8c";
+          const clientSecret = "d792294ed2e448167a3c4d1e182d1e4e";
+          const redirectUri = "https://lucent-bienenstitch-70aa1b.netlify.app/";
+
+          // Send the authorization code along with client credentials and redirect URI to the backend
+          const response = await fetch("https://localhost:7196/WeatherForecast/exchange-code", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              code: code,
+              clientId: clientId,
+              clientSecret: clientSecret,
+              redirectUri: redirectUri
+            })
+          });
+
+          const result = await response.json();
+          const authToken = result.accessToken;  // Get the access token
+
+          // Store the auth token securely in SecureStorage
+          await monday.storage.setItem("auth_token", authToken);
+          alert("Auth token stored securely in Monday Secure Storage!");
+        } else {
+          document.getElementById("status").innerText = "No authorization code found in URL.";
+        }
+      });
+
+      document.getElementById("loadTokenBtn").addEventListener("click", async () => {
+        try {
+          // Store the client credentials in Monday Secrets Manager
+          const tokenResult = await monday.storage.getItem("auth_token");
+          const token = tokenResult?.value || "No token stored";
+          alert("Stored token " + token);
+        } catch (error) {
+          console.error("Error storing credentials:", error);
+        }
+      });
+    } else {
+      console.error('Monday SDK is not initialized properly.');
+    }
+  </script>
 </body>
 </html>
