@@ -6,7 +6,7 @@
   <script src="https://cdn.monday.com/monday-sdk.js"></script>
 </head>
 <body>
-  <h2>Store Client ID & Secret in Monday Secure Storage 1</h2>
+  <h2>Store Client ID & Secret in Monday Secure Storage 2</h2>
 
   <input type="text" id="clientId" placeholder="Enter Client ID"><br><br>
   <input type="password" id="clientSecret" placeholder="Enter Client Secret"><br><br>
@@ -17,34 +17,38 @@
   <p id="message"></p>
 
   <script>
-    // Wait for the SDK to load
     window.addEventListener("load", function() {
-      const monday = window.monday;
+      // Check if the Monday SDK is available
+      if (window.monday) {
+        const monday = window.monday;
 
-      // Save credentials in Monday Secure Storage
-      document.getElementById("saveBtn").addEventListener("click", async () => {
-        const clientId = document.getElementById("clientId").value.trim();
-        const clientSecret = document.getElementById("clientSecret").value.trim();
+        // Save credentials in Monday Secure Storage
+        document.getElementById("saveBtn").addEventListener("click", async () => {
+          const clientId = document.getElementById("clientId").value.trim();
+          const clientSecret = document.getElementById("clientSecret").value.trim();
 
-        if (!clientId || !clientSecret) {
-          document.getElementById("message").innerText = "Please enter both values.";
-          return;
-        }
+          if (!clientId || !clientSecret) {
+            document.getElementById("message").innerText = "Please enter both values.";
+            return;
+          }
 
-        await monday.storage.setItem("client_id", clientId);
-        await monday.storage.setItem("client_secret", clientSecret);
+          await monday.storage.setItem("client_id", clientId);
+          await monday.storage.setItem("client_secret", clientSecret);
 
-        document.getElementById("message").innerText = "Credentials stored securely in Monday.";
-      });
+          document.getElementById("message").innerText = "Credentials stored securely in Monday.";
+        });
 
-      // Retrieve credentials from Monday Secure Storage
-      document.getElementById("loadBtn").addEventListener("click", async () => {
-        const storedId = await monday.storage.getItem("client_id");
-        const storedSecret = await monday.storage.getItem("client_secret");
+        // Retrieve credentials from Monday Secure Storage
+        document.getElementById("loadBtn").addEventListener("click", async () => {
+          const storedId = await monday.storage.getItem("client_id");
+          const storedSecret = await monday.storage.getItem("client_secret");
 
-        document.getElementById("message").innerText =
-          `Stored Client ID: ${storedId.data?.value || "(not found)"} | Stored Secret: ${storedSecret.data?.value || "(not found)"}`;
-      });
+          document.getElementById("message").innerText =
+            `Stored Client ID: ${storedId.data?.value || "(not found)"} | Stored Secret: ${storedSecret.data?.value || "(not found)"}`;
+        });
+      } else {
+        document.getElementById("message").innerText = "Error: Monday SDK not loaded.";
+      }
     });
   </script>
 </body>
