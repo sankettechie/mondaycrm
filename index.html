@@ -1,45 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Monday Secure Storage Example</title>
-  <script src="https://cdn.jsdelivr.net/npm/monday-sdk-js/dist/main.js"></script>
-</head>
-<body>
-  <h2>Store Secret in Monday Secure Storage 123</h2>
-
-  <button id="saveBtn">Save Secret</button>
-  <button id="loadBtn">Load Secret</button>
-
-  <p id="message"></p>
-
-  <script>
+<script src="https://cdn.jsdelivr.net/npm/monday-sdk-js/dist/main.js"></script>
+<script>
     const monday = window.mondaySdk();
-
-    // Save a secret to Monday Secure Storage
-    document.getElementById('saveBtn').addEventListener('click', () => {
-      monday.security.saveSecret({
-        secretName: 'mySecretKey',
-        secretValue: 'your-API-key-or-other-sensitive-data'
-      })
-      .then(() => {
-        document.getElementById("message").innerText = 'Secret saved successfully!';
-      })
-      .catch((err) => {
-        document.getElementById("message").innerText = 'Error saving secret: ' + err.message;
-      });
-    });
-
-    // Load the secret from Monday Secure Storage
-    document.getElementById('loadBtn').addEventListener('click', () => {
-      monday.security.loadSecret('mySecretKey')
-      .then((secretValue) => {
-        document.getElementById("message").innerText = 'Secret loaded: ' + secretValue;
-      })
-      .catch((err) => {
-        document.getElementById("message").innerText = 'Error loading secret: ' + err.message;
-      });
-    });
-  </script>
-</body>
-</html>
+    
+    // Check if monday.security is available
+    if (monday.security) {
+        console.log('Secure storage is available!');
+    } else {
+        console.log('monday.security is not available!');
+    }
+</script>
