@@ -6,7 +6,7 @@
   <script src="https://cdn.jsdelivr.net/npm/monday-sdk-js/dist/main.js"></script>
 </head>
 <body>
-  <h2>Test Monday SDK 10</h2>
+  <h2>Test Monday SDK 11</h2>
   <p id="message"></p>
 
   <script>
@@ -22,7 +22,8 @@
       // Retrieving the stored items
       monday.storage.getItem("client_id").then(clientId => {
         monday.storage.getItem("client_secret").then(clientSecret => {
-          alert(clientId.data + ' ' + clientSecret.data);
+          // Check if data exists and alert the values
+          alert(clientId.data ? clientId.data : 'No client_id found' + ' ' + clientSecret.data ? clientSecret.data : 'No client_secret found');
         }).catch(error => {
           console.error("Error retrieving client_secret: ", error);
         });
