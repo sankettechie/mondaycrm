@@ -6,7 +6,7 @@
   <script src="https://cdn.jsdelivr.net/npm/monday-sdk-js/dist/main.js"></script>
 </head>
 <body>
-  <h2>Test Monday SDK 14</h2>
+  <h2>Test Monday SDK 15</h2>
   <p id="message"></p>
 
   <script>
@@ -31,7 +31,7 @@
           }
           
           // If data exists, display it, otherwise show a fallback message
-          alert((clientId && clientId.data) ? clientId.data : 'No client_id found' + ' ' + (clientSecret && clientSecret.data) ? clientSecret.data : 'No client_secret found');
+          alert((clientId && clientId.data) ? clientId.data.value : 'No client_id found' + ' ' + (clientSecret && clientSecret.data) ? clientSecret.data.value : 'No client_secret found');
         }).catch(error => {
           console.error("Error retrieving client_secret: ", error);
         });
