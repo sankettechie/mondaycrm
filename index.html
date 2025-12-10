@@ -6,7 +6,7 @@
   <script src="https://cdn.jsdelivr.net/npm/monday-sdk-js/dist/main.js"></script>
 </head>
 <body>
-  <h2>Test Monday SDK 15</h2>
+  <h2>Test Monday SDK 16</h2>
   <p id="message"></p>
 
   <script>
@@ -15,6 +15,9 @@
     if (monday) {
       document.getElementById("message").innerText = "Monday SDK loaded successfully!";
       
+	   monday.storage.setItem('client_id', '123');
+      monday.storage.setItem('client_secret', '456');
+	  
       // Retrieving the stored items
       monday.storage.getItem("client_id").then(clientId => {
         monday.storage.getItem("client_secret").then(clientSecret => {
