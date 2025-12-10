@@ -2,51 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Test Monday SDK</title>
+  <title>Monday Secure Storage Example</title>
   <script src="https://cdn.jsdelivr.net/npm/monday-sdk-js/dist/main.js"></script>
 </head>
 <body>
-  <h2>Test Monday SDK 19</h2>
+  <h2>Store Secret in Monday Secure Storage 123</h2>
+
+  <button id="saveBtn">Save Secret</button>
+  <button id="loadBtn">Load Secret</button>
+
   <p id="message"></p>
 
   <script>
-  const monday = window.mondaySdk();
-  
-    if (monday) {
-      document.getElementById("message").innerText = "Monday SDK loaded successfully!";
-      
-	   //monday.storage.setItem('client_id', '123');
-      //monday.storage.setItem('client_secret', '456');
-	  debugger;
-	  monday.security.saveSecret('client_id', clientId);
-      //monday.secretsManager.set('client_secret', clientSecret);
-	  
-      // Retrieving the stored items
-      monday.storage.getItem("client_id").then(clientId => {
-        monday.storage.getItem("client_secret").then(clientSecret => {
-          // Log the entire object to inspect its structure
-          console.log("clientId object:", clientId);
-          console.log("clientSecret object:", clientSecret);
-          debugger;
-          // Inspecting the object structure in the console
-          if (clientId && clientId.data) {
-            console.log("clientId value:", clientId.data); // Check the structure
-          }
-          if (clientSecret && clientSecret.data) {
-            console.log("clientSecret value:", clientSecret.data); // Check the structure
-          }
-          
-          // If data exists, display it, otherwise show a fallback message
-          alert((clientId && clientId.data) ? clientId.data.value : 'No client_id found' + ' ' + (clientSecret && clientSecret.data) ? clientSecret.data.value : 'No client_secret found');
-        }).catch(error => {
-          console.error("Error retrieving client_secret: ", error);
-        });
-      }).catch(error => {
-        console.error("Error retrieving client_id: ", error);
+    const monday = window.mondaySdk();
+
+    // Save a secret to Monday Secure Storage
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      monday.security.saveSecret({
+        secretName: 'mySecretKey',
+        secretValue: 'your-API-key-or-other-sensitive-data'
+      })
+      .then(() => {
+        document.getElementById("message").innerText = 'Secret saved successfully!';
+      })
+      .catch((err) => {
+        document.getElementById("message").innerText = 'Error saving secret: ' + err.message;
       });
-    } else {
-      document.getElementById("message").innerText = "Error: Monday SDK not loaded.";
-    }
+    });
+
+    // Load the secret from Monday Secure Storage
+    document.getElementById('loadBtn').addEventListener('click', () => {
+      monday.security.loadSecret('mySecretKey')
+      .then((secretValue) => {
+        document.getElementById("message").innerText = 'Secret loaded: ' + secretValue;
+      })
+      .catch((err) => {
+        document.getElementById("message").innerText = 'Error loading secret: ' + err.message;
+      });
+    });
   </script>
 </body>
 </html>
