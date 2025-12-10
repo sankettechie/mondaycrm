@@ -6,7 +6,7 @@
   <script src="https://cdn.jsdelivr.net/npm/monday-sdk-js/dist/main.js"></script>
 </head>
 <body>
-  <h2>Test Monday SDK 6</h2>
+  <h2>Test Monday SDK 7</h2>
   <p id="message"></p>
 
   <script>
@@ -18,7 +18,7 @@
        //monday.storage.setItem('client_secret', '456');
 	   const clientId =  monday.storage.getItem("client_id");
       const clientSecret =  monday.storage.getItem("client_secret");
-	  alert(clientId + ' ' + clientSecret);
+	  alert(clientId.data.value + ' ' + clientSecret.data.value);
     } else {
       document.getElementById("message").innerText = "Error: Monday SDK not loaded.";
     }
