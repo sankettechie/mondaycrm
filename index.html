@@ -6,7 +6,7 @@
   <script src="https://cdn.jsdelivr.net/npm/monday-sdk-js/dist/main.js"></script>
 </head>
 <body>
-  <h2>Test Monday SDK 11</h2>
+  <h2>Test Monday SDK 14</h2>
   <p id="message"></p>
 
   <script>
@@ -15,15 +15,23 @@
     if (monday) {
       document.getElementById("message").innerText = "Monday SDK loaded successfully!";
       
-      // Storing items (if needed)
-      // monday.storage.setItem('client_id', '123');
-      // monday.storage.setItem('client_secret', '456');
-      
       // Retrieving the stored items
       monday.storage.getItem("client_id").then(clientId => {
         monday.storage.getItem("client_secret").then(clientSecret => {
-          // Check if data exists and alert the values
-          alert(clientId.data ? clientId.data : 'No client_id found' + ' ' + clientSecret.data ? clientSecret.data : 'No client_secret found');
+          // Log the entire object to inspect its structure
+          console.log("clientId object:", clientId);
+          console.log("clientSecret object:", clientSecret);
+          
+          // Inspecting the object structure in the console
+          if (clientId && clientId.data) {
+            console.log("clientId value:", clientId.data); // Check the structure
+          }
+          if (clientSecret && clientSecret.data) {
+            console.log("clientSecret value:", clientSecret.data); // Check the structure
+          }
+          
+          // If data exists, display it, otherwise show a fallback message
+          alert((clientId && clientId.data) ? clientId.data : 'No client_id found' + ' ' + (clientSecret && clientSecret.data) ? clientSecret.data : 'No client_secret found');
         }).catch(error => {
           console.error("Error retrieving client_secret: ", error);
         });
